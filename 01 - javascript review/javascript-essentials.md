@@ -12,6 +12,8 @@ var x = 10;    // function-scoped
 let y = 20;    // block-scoped
 const z = 30;  // block-scoped and immutable
 ```
+decalring with const is immutable
+
 
 Use `let` and `const` instead of `var` for modern, predictable behavior.
 
