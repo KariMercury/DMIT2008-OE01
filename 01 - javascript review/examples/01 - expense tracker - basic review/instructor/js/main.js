@@ -85,9 +85,9 @@ searchBox.addEventListener(
   "input",            // arg 1: event type/name
   function (event) {  // arg 2: callback function that fires when event is emitted
     console.log(event);
-    const searchTerm = event.target.value;
+    const searchTerm = event.target.value.toLowerCase();
     const filteredExpenses = expenses.filter(
-      (expense) => expense.title.includes(searchTerm)
+      (expense) => expense.title.toLowerCase().includes(searchTerm)
     );
     renderExpenses(filteredExpenses);
   }
