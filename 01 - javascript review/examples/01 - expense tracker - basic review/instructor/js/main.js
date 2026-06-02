@@ -38,7 +38,13 @@ function renderExpenses(expenseData) {
 }
 
 // 4. call the function to actually do the render
-renderExpenses(expenses);
+//    -> cleanup: don't just call the function; attach a listener to only fire it when the entire DOM is loaded.
+//                Guarantees avoiding the risk of trying to inject into a partially loaded DOM. 
+addEventListener("DOMContentLoaded", (event) => { 
+  renderExpenses(expenses);
+});
+
+
 
 // 5. let's write all our code as inline first, then clean it up later
 expenseForm.addEventListener(
