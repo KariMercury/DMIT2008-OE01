@@ -17,28 +17,6 @@ function renderExpenses(expenseData) {
   // for a given expense, add a new card containing that data to the expenseContainer's inner HTML
   expenseData.forEach(
     (expense) => {
-      /* We can fix a pretty rookie mistake here: any HTML element's id attribute should be
-         completely unique *across the whole DOM, regardless of element type*. Here, we have:
-           a) plain integer numbers (what if some other element somewhere else does that too? welp)
-           b) using that value three times in the card (each id should be unique), and
-           c) the card div doesn't even need an ID, because we never use it.
-
-        We *could* just use more specific strings for the id, like "card-${expense.id}", instead of just the id.
-
-        But the smart, magic-knowledge choice here is to use data-* attributes, which is something HTML
-        lets us do for exactly this kind of scenario.
-          (you don't need to go read this, but: https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/Use_data_attributes)
-
-        Basically, we can add new attributes that start with data- (followed by whatever else we want to name it),
-        e.g. data-make, data-model, data-year for a car. We can still select DOM elements & get values using those,
-        and they don't need to be unique.
-        
-        As an added bonus, JavaScript puts those all in a .dataset attribute on the DOM object (just like someDiv.id, someDiv.classList, etc.)
-        e.g. in the car example, car.dataset.make, car.dataset.model, car.dataset.year
-        (see handleExpenseContainerClick below for an example)
-
-        Unrelatedly, we may as well remove the id entirely from the card div, since it's never used.
-      */
       expenseContainer.innerHTML += `
       <div class="card">
         <div class="header">
@@ -63,9 +41,32 @@ function renderExpenses(expenseData) {
 // FUNCTIONS: expenses array logic -----------------------------------------
 // 5 + 7. handle adding, editing, and deleting expenses
 function addExpense({title, category, date, amount}) {
+  /* Using (expenses.length + 1) for the ID is *super* risky and *will* cause constant bugs,
+     because it assumes that the length of the array must determine the highest ID. It doesn't:
+       [1, 2, 3, 4, 5]
+       --> delete the third expense
+       [1, 2, 4, 5]
+       --> create a new expense, currently using id = expenses.length + 1
+       [1, 2, 4, 5, 5]
+
+     They're completely unrelated!
+
+     Instead: every time we add an expense, just look at the current highest ID and add 1 to it.
+
+     I said you'd rarely use reduce (at least compared to map & filter), but it's perfect here!
+     -> refresher:
+         map walks through an array, and applies a function to each element, returning a new array.
+         filter walks through an array, looks at whether some condition is true (for each element), and returns only those elements.
+         reduce walks through an array, carrying a running value from one element to the next, and returns that running value (not an array) at the end.
+  */
+  const maxId = expenses.reduce(  // so this is: "walk me through the expenses array,"
+    (highest, expense) => Math.max(highest, expense.id), // "for my running value & each expense, use whatever's larger as the running value,"
+    0  // *start* that running value at 0,
+    // and store the final value in 'maxId'.
+  );
+
   expenses.push({
-    id: expenses.length + 1,
-    // ^ still objectively bad, because we can end up with duplicate IDs
+    id: maxId + 1,  // tada!
     title,
     category,
     date,
