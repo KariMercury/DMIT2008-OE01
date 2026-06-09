@@ -1,7 +1,9 @@
 import expenses from './expense-data.js';
 
+// custom components
+import './components/ExpenseSearch.js';
+
 const expenseContainer = document.getElementById('expense-container');
-const searchBox = document.getElementById('searchbox');
 const expenseForm = document.getElementById('expense-form-add');
 const submitButton = document.getElementById('submitter');
 
@@ -25,7 +27,6 @@ function renderExpenses(expenseData) {
     `
   ).join("")
 }
-
 
 function addExpense({title, category, date, amount}) {
   const maxId = expenses.reduce(
@@ -59,7 +60,6 @@ function searchExpenses(query) {
   );
 }
 
-// FUNCTIONS: form ------------------------------------------------------------
 function readFormData() {
   return {
     title: document.getElementById("title").value,
@@ -127,10 +127,8 @@ function handleExpenseContainerClick(event) {
 
 
 expenseForm.addEventListener("submit", handleFormSubmit);
-searchBox.addEventListener("input", handleSearch);
 expenseContainer.addEventListener("click", handleExpenseContainerClick);
 
 document.addEventListener("DOMContentLoaded", (event) => { 
   renderExpenses(expenses);
 });
-
