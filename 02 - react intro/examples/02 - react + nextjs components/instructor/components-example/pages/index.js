@@ -7,6 +7,7 @@ import styles from "@/styles/Home.module.css";
 
 // my components
 import Hello from '../components/Hello';
+import NewConcept from '../components/NewConcept';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 
 export default function Home() {
   return (
@@ -32,6 +34,7 @@ export default function Home() {
       >
         <main className={styles.main}>
           <Hello />
+          <NewConcept concept="creating and using components" />
         </main>
       </div>
     </>
