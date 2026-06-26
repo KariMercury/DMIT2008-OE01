@@ -32,3 +32,13 @@ export default function Home() {
     </>
   );
 }
+
+
+// Notes on STATE: NEXT CLASS
+// (add these to next classes notes)
+// state maintains somethign inthe code so it cannot be changed
+// components run a functiona nd re-render automatically
+// basically we cant jsut use JS variables becasue everything re-renders and basically resets to default
+// state is how we store info outside the scope of the componsent so it stays pure from React
+// if hte compnent re-renders - then when compnent runs again it pulls a new value from use state
+// kinda like private fields getter / setter firstName, setFirstName
