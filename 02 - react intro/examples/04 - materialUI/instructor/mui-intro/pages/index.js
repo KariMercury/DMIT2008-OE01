@@ -14,7 +14,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Container maxWidth="sm">
+        <Container maxWidth="md" style={{ background: '#cccccc' }}>
           some content we'll add later
         </Container>
       </main>
