@@ -13,8 +13,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className={styles.main}>
-        <Container maxWidth="lg">
+        <Container maxWidth="sm" style={{ background: '#cccccc'}}> 
           some content we'll add later
         </Container>
       </main>

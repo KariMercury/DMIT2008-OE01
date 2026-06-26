@@ -8,7 +8,7 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body>
-        put some stuff here
+        
         <Main />
         <NextScript />
       </body>
