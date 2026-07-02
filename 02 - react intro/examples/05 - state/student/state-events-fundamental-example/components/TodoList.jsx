@@ -15,6 +15,7 @@ export default function TodoList() {
     }
 
     return (
+    <div>
         <TextField 
             id="standard-basic"
             label="New todo item"
@@ -23,5 +24,11 @@ export default function TodoList() {
             value={todoItem}
             onChange={onTodoTextChange}
         />
+        <Button variant="contained"
+                onClick={onTodoTextChange}
+        >
+            Add ToDo Item
+        </Button>
+    </div>    
     )
 }
