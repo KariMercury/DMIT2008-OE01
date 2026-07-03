@@ -25,6 +25,12 @@ export default function Home() {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchYear, setSearchYear] = useState("");
 
+  const handleSubmit = () => {
+    event.preventDefault();
+    console.log(searchTitle);
+    console.log(searchYear);
+  }
+
   return (
     <div>
       <Head>
@@ -42,7 +48,10 @@ export default function Home() {
           <Typography variant="h2" component="h2" style={{textAlign: "center"}}>
             Movies
           </Typography>
-          <form style={{width: '100%'}}>
+          <form
+            style={{width: '100%'}}
+            onSubmit={handleSubmit}
+          >
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
