@@ -38,8 +38,29 @@ export default function Home() {
 
   const filterMovies = () => {
     // 1. temporarily copy the original MOVIE_LIST so I don't mutate original data
+    let filteredMovies = [...MOVIE_LIST] // I can't just = MOVIE_LIST because then it'll alter the original
+
     // 2. deal with title (trim, lowercase, match on .includes() )
+    if (searchTitle.trim()) {
+      filteredMovies = filteredMovies.filter(
+        (movie) => { 
+          // filter's callback function should return something truthy or falsey
+          return movie.name.toLowerCase().includes(
+            searchTitle.trim().toLowerCase()
+          )
+        }
+      )
+    }
+
     // 3. deal with the year (trim, convert to integter, match on equality)
+    if (searchYear.trim()) {
+      filteredMovies = filteredMovies.filter((movie) => {
+        return movie.year === parseInt(searchYear.trim())
+      })
+    }
+
+    // 4. now that we're done processing the array, write it to state
+    setMovies(filteredMovies);
   }
 
   return (
