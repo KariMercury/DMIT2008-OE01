@@ -25,10 +25,21 @@ export default function Home() {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchYear, setSearchYear] = useState("");
 
+  // this is what I'll be mutating / rendering from so that the original MOVIE_LIST
+  // always remains intact.
+  const [movies, setMovies] = useState(MOVIE_LIST);
+
   const handleSubmit = () => {
     event.preventDefault();
+    filterMovies();
     console.log(searchTitle);
     console.log(searchYear);
+  }
+
+  const filterMovies = () => {
+    // 1. temporarily copy the original MOVIE_LIST so I don't mutate original data
+    // 2. deal with title (trim, lowercase, match on .includes() )
+    // 3. deal with the year (trim, convert to integter, match on equality)
   }
 
   return (
@@ -87,7 +98,7 @@ export default function Home() {
             </Grid>
           </form>
           <List sx={{width: `100%`}}>
-          { MOVIE_LIST.map((movieData, index)=> {
+          { movies.map((movieData, index)=> {
               return <ListItem key={index}>
                 <ListItemText>
                   <Typography variant="p" component="div">
