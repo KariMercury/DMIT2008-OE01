@@ -23,6 +23,8 @@ export default function TodoList() {
 
   const onTodoTextChange = (event) => {
     // call state variable's setter w/ new value to write.
+    // since this function is just wrapping the call of one other function,
+    // we don't *really* need it (see below in JSX)
     setTodoItem(event.target.value)
   }
 
@@ -54,7 +56,7 @@ export default function TodoList() {
             variant="standard"
             sx={{ width: '100%' }}
             value={todoItem}
-            onChange={onTodoTextChange}
+            onChange={(e) => setTodoItem(e.target.value)}
           />
         </Grid>
 
