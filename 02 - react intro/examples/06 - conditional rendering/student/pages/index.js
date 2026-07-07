@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { MOVIE_LIST } from '../utils/movies'
 
 import Head from 'next/head'
@@ -15,7 +17,86 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
+// NOTE: This is using old MUI syntax, just so you're exposed to both syntax styles
+// in case you end up working in React on the job.
+
 export default function Home() {
+
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchYear, setSearchYear] = useState("");
+
+  // this is what I'll be mutating / rendering from so that the original MOVIE_LIST
+  // always remains intact.
+  const [movies, setMovies] = useState(MOVIE_LIST);
+
+    // we are making a new state variable 
+    //set up a statefl ERROR MSG 
+
+    const [errorMsg, setErrodMsg] = useState("")
+
+
+  const handleSubmit = () => {
+    event.preventDefault();
+    //
+    validateSearch();
+    //filter and check using the function 
+    filterMovies();
+    console.log(searchTitle);
+    console.log(searchYear);
+  }
+  //validate the data and then
+
+  const validateSearch = () => {
+    //considerations for whether there are input errors
+    // check the humans because we cant trust a human
+    // they can really fuck that year up 
+    if ( !searchYear.trim().length) {
+      //if they dont put in a year we dont need to do more vlaidation
+      setErrorMsg("") // clear that error they dont nee dthe constant reminder of their failure
+      return // they always come back
+    }
+    // if something is NOT and # 
+     if (!isValidYear(searchYear)) {
+      setErrodMsg(`${searchYear} is not a valid year`)
+     }
+  }
+
+  const isValidYear = (year) => {
+    // A. is a valid number B. chek for length
+    return isNaN(year) && year.trim().length === 4
+  }
+
+  // when we are filtering data we want to create a display copy of that data first
+  // we are creating
+  const filterMovies = () => {
+    // 1. temporarily copy the original MOVIE_LIST so I don't mutate original data
+    let filteredMovies = [...MOVIE_LIST] // I can't just = MOVIE_LIST because then it'll alter the original
+
+    // 2. deal with title (trim, lowercase, match on .includes() )
+    if (searchTitle.trim()) {
+      filteredMovies = filteredMovies.filter(
+        (movie) => { 
+          // filter's callback function should return something truthy or falsey
+          // dons logic null check whitespace data types case sensitive ... validate every gate possibl
+          
+          return movie.name.toLowerCase().includes(
+            searchTitle.trim().toLowerCase()
+          )
+        }
+      )
+    }
+
+    // 3. deal with the year (trim, convert to integter, match on equality)
+    if (searchYear.trim()) {
+      filteredMovies = filteredMovies.filter((movie) => {
+        return movie.year === parseInt(searchYear.trim())
+      })
+    }
+
+    // 4. now that we're done processing the array, write it to state
+    setMovies(filteredMovies);
+  }
+
   return (
     <div>
       <Head>
@@ -33,13 +114,18 @@ export default function Home() {
           <Typography variant="h2" component="h2" style={{textAlign: "center"}}>
             Movies
           </Typography>
-          <form style={{width: '100%'}}>
+          <form
+            style={{width: '100%'}}
+            onSubmit={handleSubmit}
+          >
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
                   id="search-field"
                   label="search..."
                   variant="standard"
+                  value={searchTitle}
+                  onChange={(e) => {setSearchTitle(e.target.value)}}
                   sx={{width: '100%'}}
                   
                 />
@@ -49,6 +135,8 @@ export default function Home() {
                   id="year-field"
                   label="year"
                   variant="standard"
+                  value={searchYear}
+                  onChange={(e) => {setSearchYear(e.target.value)}}
                   sx={{width: '100%'}}
                  
                 />
@@ -61,11 +149,29 @@ export default function Home() {
               </Grid>
               <Grid item xs={10}>
                 {/* Add the error message here*/}
+                {/* { errorMsg && 
+
+                } */}
               </Grid>
             </Grid>
           </form>
           <List sx={{width: `100%`}}>
-          { MOVIE_LIST.map((movieData, index)=> {
+
+      {/*changes the logic based on something else
+        if no movies then show that message 
+        what happens when i want to show A or B depending on the condition*/}
+              <ListItem>
+                <ListItemText>
+                  <Typography variant="p" component="div">
+                    { !movies.length ?
+                    "No Matches found."
+                    :
+                    `${movies.length} movie results:`}
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+          
+          { movies.map((movieData, index)=> {
               return <ListItem key={index}>
                 <ListItemText>
                   <Typography variant="p" component="div">
@@ -81,3 +187,6 @@ export default function Home() {
     </div>
   )
 }
+
+
+// Ass03
