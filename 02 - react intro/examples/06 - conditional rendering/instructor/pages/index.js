@@ -22,6 +22,24 @@ import ListItemText from '@mui/material/ListItemText';
 
 export default function Home() {
 
+  /* I've shown you setting up one stateful variable for each form field
+     just to get you used to implementing state, but what if our form had
+     many, many fields? Our code gets bloated if we have 30 stateful variables.
+
+     Remember, state can store any data type. Therefore, we may as well just collect
+     all our form inputs into one *object*, and change its properties.
+
+     We'll wire this up next class, but this is what we need to get started:
+     (I would probably write this on one line with just these two properties,
+     but I'm expanding it out to show you how I'd write it if there were lots.)
+  */
+  const [searchForm, setSearchForm] = useState(
+    {
+      title: "",
+      year: ""
+    }
+  )
+
   const [searchTitle, setSearchTitle] = useState("");
   const [searchYear, setSearchYear] = useState("");
 
