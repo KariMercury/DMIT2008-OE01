@@ -29,11 +29,31 @@ export default function Home() {
   // always remains intact.
   const [movies, setMovies] = useState(MOVIE_LIST);
 
+  // set up a stateful error message
+  const [errorMsg, setErrorMsg] = useState("")
+
   const handleSubmit = () => {
     event.preventDefault();
+    validateSearch();
     filterMovies();
     console.log(searchTitle);
     console.log(searchYear);
+  }
+
+  const validateSearch = () => {
+    // considerations for whether there are input errors
+
+    if (!searchYear.trim().length) { // or year.trim().length === 0
+      // this means no input, so there cannot be any errors
+      // therefore, reset error state
+      setErrorMsg("")
+      return
+    }
+
+    if (!isValidYear(searchYear)) {
+      setErrorMsg(`${searchYear} is not a valid year.`)
+    }
+
   }
 
   const filterMovies = () => {
@@ -61,6 +81,11 @@ export default function Home() {
 
     // 4. now that we're done processing the array, write it to state
     setMovies(filteredMovies);
+  }
+
+  const isValidYear = (year) => {
+    // a) is a valid number, b) check for length
+    return !isNaN(year) && year.trim().length === 4
   }
 
   return (
@@ -114,7 +139,9 @@ export default function Home() {
                   >Filter</Button>
                 </Grid>
                 <Grid item xs={10}>
-                  {/* Add the error message here*/}
+                  { errorMsg &&
+                    <Alert severity="error">{errorMsg}</Alert>
+                  }
                 </Grid>
               </Grid>
             </form>
