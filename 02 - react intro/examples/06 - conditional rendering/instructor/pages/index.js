@@ -22,6 +22,24 @@ import ListItemText from '@mui/material/ListItemText';
 
 export default function Home() {
 
+  /* I've shown you setting up one stateful variable for each form field
+     just to get you used to implementing state, but what if our form had
+     many, many fields? Our code gets bloated if we have 30 stateful variables.
+
+     Remember, state can store any data type. Therefore, we may as well just collect
+     all our form inputs into one *object*, and change its properties.
+
+     We'll wire this up next class, but this is what we need to get started:
+     (I would probably write this on one line with just these two properties,
+     but I'm expanding it out to show you how I'd write it if there were lots.)
+  */
+  const [searchForm, setSearchForm] = useState(
+    {
+      title: "",
+      year: ""
+    }
+  )
+
   const [searchTitle, setSearchTitle] = useState("");
   const [searchYear, setSearchYear] = useState("");
 
@@ -29,11 +47,31 @@ export default function Home() {
   // always remains intact.
   const [movies, setMovies] = useState(MOVIE_LIST);
 
+  // set up a stateful error message
+  const [errorMsg, setErrorMsg] = useState("")
+
   const handleSubmit = () => {
     event.preventDefault();
+    validateSearch();
     filterMovies();
     console.log(searchTitle);
     console.log(searchYear);
+  }
+
+  const validateSearch = () => {
+    // considerations for whether there are input errors
+
+    if (!searchYear.trim().length) { // or year.trim().length === 0
+      // this means no input, so there cannot be any errors
+      // therefore, reset error state
+      setErrorMsg("")
+      return
+    }
+
+    if (!isValidYear(searchYear)) {
+      setErrorMsg(`${searchYear} is not a valid year.`)
+    }
+
   }
 
   const filterMovies = () => {
@@ -63,6 +101,11 @@ export default function Home() {
     setMovies(filteredMovies);
   }
 
+  const isValidYear = (year) => {
+    // a) is a valid number, b) check for length
+    return !isNaN(year) && year.trim().length === 4
+  }
+
   return (
     <div>
       <Head>
@@ -80,45 +123,61 @@ export default function Home() {
           <Typography variant="h2" component="h2" style={{textAlign: "center"}}>
             Movies
           </Typography>
-          <form
-            style={{width: '100%'}}
-            onSubmit={handleSubmit}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  id="search-field"
-                  label="search..."
-                  variant="standard"
-                  value={searchTitle}
-                  onChange={(e) => {setSearchTitle(e.target.value)}}
-                  sx={{width: '100%'}}
-                  
-                />
+            <form
+              style={{width: '100%'}}
+              onSubmit={handleSubmit}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    id="search-field"
+                    label="search..."
+                    variant="standard"
+                    value={searchTitle}
+                    onChange={(e) => {setSearchTitle(e.target.value)}}
+                    sx={{width: '100%'}}
+                    
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    id="year-field"
+                    label="year"
+                    variant="standard"
+                    value={searchYear}
+                    onChange={(e) => {setSearchYear(e.target.value)}}
+                    sx={{width: '100%'}}
+                   
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                  >Filter</Button>
+                </Grid>
+                <Grid item xs={10}>
+                  { errorMsg &&
+                    <Alert severity="error">{errorMsg}</Alert>
+                  }
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  id="year-field"
-                  label="year"
-                  variant="standard"
-                  value={searchYear}
-                  onChange={(e) => {setSearchYear(e.target.value)}}
-                  sx={{width: '100%'}}
-                 
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                >Filter</Button>
-              </Grid>
-              <Grid item xs={10}>
-                {/* Add the error message here*/}
-              </Grid>
-            </Grid>
-          </form>
+            </form>
           <List sx={{width: `100%`}}>
+
+            {/* Note how this differs from the readme:
+                We only make conditional the part that changes.
+                Much cleaner & more readable code; someone else (that includes future you)
+                doesn't have to meticulously examine every line to make sure nothing else changed.
+            */}
+            <ListItem>
+              <ListItemText>
+                <Typography variant="p" component="div">
+                  { !movies.length ? "No matches found." : `${movies.length} movie results:` }
+                </Typography>
+              </ListItemText>
+            </ListItem>
+
           { movies.map((movieData, index)=> {
               return <ListItem key={index}>
                 <ListItemText>
