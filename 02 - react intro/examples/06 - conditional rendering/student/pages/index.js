@@ -21,6 +21,9 @@ import ListItemText from '@mui/material/ListItemText';
 // in case you end up working in React on the job.
 
 export default function Home() {
+//instead of a state for each field you can create a blank object { title: "", serachYear: "" }
+// const 
+
 
   const [searchTitle, setSearchTitle] = useState("");
   const [searchYear, setSearchYear] = useState("");
