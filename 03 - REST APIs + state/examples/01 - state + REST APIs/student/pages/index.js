@@ -12,6 +12,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
+const newData = { quote: "blah blah blah", author: "trump"}
+
+
 export default function Home() {
 //component with static html to start right
 
@@ -19,12 +22,18 @@ export default function Home() {
 // so to do that we would send a fetch then wire that response to state
 // we should immediately set quote data to and object that is initially shaped like what we need? or a blank string or to the part of the page we are using
 
+
+
  const [quoteData, setQuoteData] = useState(
     {
       quote: "Quote here.",
       author: "Author here",
     }
   )
+
+  const getQuote = () => {
+    setQuoteData(newData)
+  }
 
  return (
      <div>
@@ -72,6 +81,7 @@ export default function Home() {
              >
                <Button
                  variant="contained"
+                 onClick={getQuote}
                >
                  Get New Quote
                </Button>
