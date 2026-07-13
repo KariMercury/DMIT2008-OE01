@@ -21,83 +21,86 @@ import ListItemText from '@mui/material/ListItemText';
 // in case you end up working in React on the job.
 
 export default function Home() {
-//instead of a state for each field you can create a blank object { title: "", serachYear: "" }
-// const 
 
+  /* I've shown you setting up one stateful variable for each form field
+     just to get you used to implementing state, but what if our form had
+     many, many fields? Our code gets bloated if we have 30 stateful variables.
 
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchYear, setSearchYear] = useState("");
+     Remember, state can store any data type. Therefore, we may as well just collect
+     all our form inputs into one *object*, and change its properties.
+
+     We'll wire this up next class, but this is what we need to get started:
+     (I would probably write this on one line with just these two properties,
+     but I'm expanding it out to show you how I'd write it if there were lots.)
+  */
+  const [searchForm, setSearchForm] = useState(
+    {
+      title: "",
+      year: "",
+    }
+  )
 
   // this is what I'll be mutating / rendering from so that the original MOVIE_LIST
   // always remains intact.
   const [movies, setMovies] = useState(MOVIE_LIST);
 
-    // we are making a new state variable 
-    //set up a statefl ERROR MSG 
-
-    const [errorMsg, setErrodMsg] = useState("")
-
+  // set up a stateful error message
+  const [errorMsg, setErrorMsg] = useState("")
 
   const handleSubmit = () => {
     event.preventDefault();
-    //
     validateSearch();
-    //filter and check using the function 
     filterMovies();
-    console.log(searchTitle);
-    console.log(searchYear);
+    console.log(searchForm.title);
+    console.log(searchForm.year);
   }
-  //validate the data and then
 
   const validateSearch = () => {
-    //considerations for whether there are input errors
-    // check the humans because we cant trust a human
-    // they can really fuck that year up 
-    if ( !searchYear.trim().length) {
-      //if they dont put in a year we dont need to do more vlaidation
-      setErrorMsg("") // clear that error they dont nee dthe constant reminder of their failure
-      return // they always come back
+    // considerations for whether there are input errors
+
+    if (!searchForm.year.trim().length) { // or year.trim().length === 0
+      // this means no input, so there cannot be any errors
+      // therefore, reset error state
+      setErrorMsg("")
+      return
     }
-    // if something is NOT and # 
-     if (!isValidYear(searchYear)) {
-      setErrodMsg(`${searchYear} is not a valid year`)
-     }
+
+    if (!isValidYear(searchForm.year)) {
+      setErrorMsg(`${searchForm.year} is not a valid year.`)
+    }
+
   }
 
-  const isValidYear = (year) => {
-    // A. is a valid number B. chek for length
-    return isNaN(year) && year.trim().length === 4
-  }
-
-  // when we are filtering data we want to create a display copy of that data first
-  // we are creating
   const filterMovies = () => {
     // 1. temporarily copy the original MOVIE_LIST so I don't mutate original data
     let filteredMovies = [...MOVIE_LIST] // I can't just = MOVIE_LIST because then it'll alter the original
 
     // 2. deal with title (trim, lowercase, match on .includes() )
-    if (searchTitle.trim()) {
+    if (searchForm.title.trim()) {
       filteredMovies = filteredMovies.filter(
         (movie) => { 
           // filter's callback function should return something truthy or falsey
-          // dons logic null check whitespace data types case sensitive ... validate every gate possibl
-          
           return movie.name.toLowerCase().includes(
-            searchTitle.trim().toLowerCase()
+            searchForm.title.trim().toLowerCase()
           )
         }
       )
     }
 
     // 3. deal with the year (trim, convert to integter, match on equality)
-    if (searchYear.trim()) {
+    if (searchForm.year.trim()) {
       filteredMovies = filteredMovies.filter((movie) => {
-        return movie.year === parseInt(searchYear.trim())
+        return movie.year === parseInt(searchForm.year.trim())
       })
     }
 
     // 4. now that we're done processing the array, write it to state
     setMovies(filteredMovies);
+  }
+
+  const isValidYear = (year) => {
+    // a) is a valid number, b) check for length
+    return !isNaN(year) && year.trim().length === 4
   }
 
   return (
@@ -117,63 +120,72 @@ export default function Home() {
           <Typography variant="h2" component="h2" style={{textAlign: "center"}}>
             Movies
           </Typography>
-          <form
-            style={{width: '100%'}}
-            onSubmit={handleSubmit}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  id="search-field"
-                  label="search..."
-                  variant="standard"
-                  value={searchTitle}
-                  onChange={(e) => {setSearchTitle(e.target.value)}}
-                  sx={{width: '100%'}}
-                  
-                />
+            <form
+              style={{width: '100%'}}
+              onSubmit={handleSubmit}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    id="search-field"
+                    label="search..."
+                    variant="standard"
+                    value={searchForm.title}
+                    onChange={
+                      /* We need to reconstruct the whole object when writing to state (just like arrays),
+                         and the syntax is similar! Instead of [...arrayItems, newItem], we just
+                         {...object, specificProperty: newValue }
+                      */
+                      (e) => {setSearchForm(
+                        {...searchForm, title: e.target.value}
+                      )}
+                    }
+                    sx={{width: '100%'}}
+                    
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    id="year-field"
+                    label="year"
+                    variant="standard"
+                    value={searchForm.year}
+                    onChange={(e) => {setSearchForm(
+                      {...searchForm, year: e.target.value}
+                      )}}
+                    sx={{width: '100%'}}
+                   
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                  >Filter</Button>
+                </Grid>
+                <Grid item xs={10}>
+                  { errorMsg &&
+                    <Alert severity="error">{errorMsg}</Alert>
+                  }
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  id="year-field"
-                  label="year"
-                  variant="standard"
-                  value={searchYear}
-                  onChange={(e) => {setSearchYear(e.target.value)}}
-                  sx={{width: '100%'}}
-                 
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                >Filter</Button>
-              </Grid>
-              <Grid item xs={10}>
-                {/* Add the error message here*/}
-                {/* { errorMsg && 
-
-                } */}
-              </Grid>
-            </Grid>
-          </form>
+            </form>
           <List sx={{width: `100%`}}>
 
-      {/*changes the logic based on something else
-        if no movies then show that message 
-        what happens when i want to show A or B depending on the condition*/}
-              <ListItem>
-                <ListItemText>
-                  <Typography variant="p" component="div">
-                    { !movies.length ?
-                    "No Matches found."
-                    :
-                    `${movies.length} movie results:`}
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-          
+            {/* Note how this differs from the readme:
+                We only make conditional the part that changes.
+                Much cleaner & more readable code; someone else (that includes future you)
+                doesn't have to meticulously examine every line to make sure nothing else changed.
+            */}
+            <ListItem>
+              <ListItemText>
+                <Typography variant="p" component="div">
+                  { !movies.length ? "No matches found." : `${movies.length} movie results:` }
+                  {/*  we love ternary ?          true   :   false (fake bish) */}
+                </Typography>
+              </ListItemText>
+            </ListItem>
+
           { movies.map((movieData, index)=> {
               return <ListItem key={index}>
                 <ListItemText>
@@ -190,6 +202,3 @@ export default function Home() {
     </div>
   )
 }
-
-
-// Ass03
