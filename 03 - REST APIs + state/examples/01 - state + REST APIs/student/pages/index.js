@@ -10,8 +10,15 @@ import Container from '@mui/material/Container';
 
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 export default function Home() {
+//component with static html to start right
+
+// we know we need to have the data coming in trigger an auto re-render
+// so to do that we would send a fetch then wire that response to state
+// we should immediately set quote data to and object that is initially shaped like what we need? or a blank string or to the part of the page we are using
+
 
 
   return (

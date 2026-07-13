@@ -181,6 +181,7 @@ export default function Home() {
               <ListItemText>
                 <Typography variant="p" component="div">
                   { !movies.length ? "No matches found." : `${movies.length} movie results:` }
+                  {/*  we love ternary ?          true   :   false (fake bish) */}
                 </Typography>
               </ListItemText>
             </ListItem>
