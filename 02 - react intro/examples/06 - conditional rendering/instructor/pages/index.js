@@ -36,12 +36,9 @@ export default function Home() {
   const [searchForm, setSearchForm] = useState(
     {
       title: "",
-      year: ""
+      year: "",
     }
   )
-
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchYear, setSearchYear] = useState("");
 
   // this is what I'll be mutating / rendering from so that the original MOVIE_LIST
   // always remains intact.
@@ -54,22 +51,22 @@ export default function Home() {
     event.preventDefault();
     validateSearch();
     filterMovies();
-    console.log(searchTitle);
-    console.log(searchYear);
+    console.log(searchForm.title);
+    console.log(searchForm.year);
   }
 
   const validateSearch = () => {
     // considerations for whether there are input errors
 
-    if (!searchYear.trim().length) { // or year.trim().length === 0
+    if (!searchForm.year.trim().length) { // or year.trim().length === 0
       // this means no input, so there cannot be any errors
       // therefore, reset error state
       setErrorMsg("")
       return
     }
 
-    if (!isValidYear(searchYear)) {
-      setErrorMsg(`${searchYear} is not a valid year.`)
+    if (!isValidYear(searchForm.year)) {
+      setErrorMsg(`${searchForm.year} is not a valid year.`)
     }
 
   }
@@ -79,21 +76,21 @@ export default function Home() {
     let filteredMovies = [...MOVIE_LIST] // I can't just = MOVIE_LIST because then it'll alter the original
 
     // 2. deal with title (trim, lowercase, match on .includes() )
-    if (searchTitle.trim()) {
+    if (searchForm.title.trim()) {
       filteredMovies = filteredMovies.filter(
         (movie) => { 
           // filter's callback function should return something truthy or falsey
           return movie.name.toLowerCase().includes(
-            searchTitle.trim().toLowerCase()
+            searchForm.title.trim().toLowerCase()
           )
         }
       )
     }
 
     // 3. deal with the year (trim, convert to integter, match on equality)
-    if (searchYear.trim()) {
+    if (searchForm.year.trim()) {
       filteredMovies = filteredMovies.filter((movie) => {
-        return movie.year === parseInt(searchYear.trim())
+        return movie.year === parseInt(searchForm.year.trim())
       })
     }
 
@@ -133,8 +130,16 @@ export default function Home() {
                     id="search-field"
                     label="search..."
                     variant="standard"
-                    value={searchTitle}
-                    onChange={(e) => {setSearchTitle(e.target.value)}}
+                    value={searchForm.title}
+                    onChange={
+                      /* We need to reconstruct the whole object when writing to state (just like arrays),
+                         and the syntax is similar! Instead of [...arrayItems, newItem], we just
+                         {...object, specificProperty: newValue }
+                      */
+                      (e) => {setSearchForm(
+                        {...searchForm, title: e.target.value}
+                      )}
+                    }
                     sx={{width: '100%'}}
                     
                   />
@@ -144,8 +149,10 @@ export default function Home() {
                     id="year-field"
                     label="year"
                     variant="standard"
-                    value={searchYear}
-                    onChange={(e) => {setSearchYear(e.target.value)}}
+                    value={searchForm.year}
+                    onChange={(e) => {setSearchForm(
+                      {...searchForm, year: e.target.value}
+                      )}}
                     sx={{width: '100%'}}
                    
                   />
