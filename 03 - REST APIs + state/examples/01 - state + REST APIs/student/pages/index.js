@@ -11,8 +11,9 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
+import { getRandomQuote } from '../utils.quotesApi.jsx';
 
-const newData = { quote: "blah blah blah", author: "trump"}
+// const newData = { quote: "blah blah blah", author: "trump"}
 
 
 export default function Home() {
@@ -32,7 +33,11 @@ export default function Home() {
   )
 
   const getQuote = () => {
-    setQuoteData(newData)
+    const quoteData = await getRandomQuote();
+    console.log(quoteData);
+    setQuoteData(
+      {quote: quoteData.quote, author: quoteData.author }
+    )
   }
 
  return (
@@ -62,6 +67,12 @@ export default function Home() {
                pb: 6,
              }}
            >
+            <Button
+                 variant="contained"
+                 onClick={getQuote}
+               >
+                 Get New Quote
+               </Button>
              <Typography variant="h5" align="center" color="text.primary" paragraph>
                {quoteData.quote}
              </Typography>
@@ -79,12 +90,7 @@ export default function Home() {
               justifyContent="center"
  
              >
-               <Button
-                 variant="contained"
-                 onClick={getQuote}
-               >
-                 Get New Quote
-               </Button>
+               
              </Box>
            </Box>
          </Container>
