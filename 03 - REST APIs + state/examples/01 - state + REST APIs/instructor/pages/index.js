@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { getRandomQuote } from '../utils/quotesApi.js';
+
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
@@ -13,10 +15,6 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
-// let's pretend we have some data that is scoped externally from the component,
-// just like incoming REST API data would be!
-const newData = { quote: "You can't just make up quotes", author: "Oscar Wilde", }
-
 
 export default function Home() {
 
@@ -27,8 +25,10 @@ export default function Home() {
     }
   )
 
-  const getQuote = () => {
-    setQuoteData(newData);
+  const getQuote = async () => {
+    const quoteData = await getRandomQuote();
+    console.log(quoteData);
+    setQuoteData({ quote: quoteData.quote, author: quoteData.author });
   }
 
   return (
@@ -58,6 +58,19 @@ export default function Home() {
               pb: 6,
             }}
           >
+            <Box
+             display="flex"
+             justifyContent="center"
+
+            >
+              <Button
+                variant="contained"
+                onClick={getQuote}
+                sx={{ mb: 4 }}
+              >
+                Get New Quote
+              </Button>
+            </Box>
             <Typography variant="h5" align="center" color="text.primary" paragraph>
               {quoteData.quote}
             </Typography>
@@ -70,18 +83,6 @@ export default function Home() {
             >
               {quoteData.author}
             </Typography>
-            <Box
-             display="flex"
-             justifyContent="center"
-
-            >
-              <Button
-                variant="contained"
-                onClick={getQuote}
-              >
-                Get New Quote
-              </Button>
-            </Box>
           </Box>
         </Container>
       </main>
