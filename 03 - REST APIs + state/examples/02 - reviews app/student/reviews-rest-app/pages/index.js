@@ -27,6 +27,13 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+/* 
+  GAME PLAN:
+    1. wire input fields to state (ideally one object for all inputs not one stateful variable per input)
+    2. wire the submit action (take stateful data, run some sore of handle fucntion to add new review)
+    3. rewire our data source to our REST API (instead of local var data)
+    4. bonus: some other fun logic we can do + UI touchups
+*/
 
 
 export default function Home() {
