@@ -1,5 +1,6 @@
+import { useState } from 'react';
+
 import Head from 'next/head'
-import Image from 'next/image'
 
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -35,12 +36,30 @@ import Typography from '@mui/material/Typography';
     3. rewire our data source to REST API instead of local var data
     4. bonus: some other fun logic we can do + UI touchups
 */
+
+const MOCK_ADAPTATION_RATING = [{
+  'title': 'Fight Club',
+  'comment': 'Great movie and book',
+  'rating': 10
+}]
+
+
 export default function Home() {
-  const MOCK_ADAPTATION_RATING = [{
-    'title': 'Fight Club',
-    'comment': 'Great movie and book',
-    'rating': 10
-  }]
+
+  const [reviews, setReviews] = useState(MOCK_ADAPTATION_RATING)
+  const [formData, setFormData] = useState({
+    title: "",
+    comment: "",
+    rating: 1,
+  })
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setReviews([...reviews, formData]);
+    // QOL: always reset your form inputs after valid submission
+    setFormData({ title: "", comment: "", rating: 1});
+  }
+
   return (
     <div>
       <Head>
@@ -57,7 +76,9 @@ export default function Home() {
       </AppBar>
       <main>
         <Container maxWidth="md">
-          <form>
+          <form
+            onSubmit={handleSubmit}
+          >
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <TextField
@@ -66,6 +87,8 @@ export default function Home() {
                   label="Adaptation Title"
                   fullWidth
                   variant="standard"
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -75,6 +98,8 @@ export default function Home() {
                   label="Comments"
                   fullWidth
                   variant="standard"
+                  value={formData.comment}
+                  onChange={(e) => setFormData({...formData, comment: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -84,6 +109,8 @@ export default function Home() {
                     row
                     aria-labelledby="adaptation-rating"
                     name="rating-buttons-group"
+                    value={formData.rating}
+                    onChange={(e) => setFormData({...formData, rating: parseInt(e.target.value)})}
                   >
                     <FormControlLabel value="1" control={<Radio />} label="1" />
                     <FormControlLabel value="2" control={<Radio />} label="2" />
@@ -94,7 +121,7 @@ export default function Home() {
                     <FormControlLabel value="7" control={<Radio />} label="7" />
                     <FormControlLabel value="8" control={<Radio />} label="8" />
                     <FormControlLabel value="9" control={<Radio />} label="9" />
-                    <FormControlLabel value="10" control={<Radio />} label="10" />
+                    <FormControlLabel value={10} control={<Radio />} label="10" />
                   </RadioGroup>
                </FormControl>
               </Grid>
@@ -120,8 +147,8 @@ export default function Home() {
               Load All Current Reviews
             </Button>
           </Box>
-          {MOCK_ADAPTATION_RATING.map((adaptation, index)=> {
-            return <Card key={index}>
+          {reviews.map((adaptation, index)=> {
+            return <Card key={index} sx={{ my: 2 }}>
               <CardHeader
                 avatar={
                   <Avatar sx={{ bgcolor: 'blue' }} aria-label="recipe">
