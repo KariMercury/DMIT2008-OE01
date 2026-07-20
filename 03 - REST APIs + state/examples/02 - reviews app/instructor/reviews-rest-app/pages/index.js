@@ -37,16 +37,9 @@ import Typography from '@mui/material/Typography';
     4. bonus: some other fun logic we can do + UI touchups
 */
 
-const MOCK_ADAPTATION_RATING = [{
-  'title': 'Fight Club',
-  'comment': 'Great movie and book',
-  'rating': 10
-}]
-
-
 export default function Home() {
 
-  const [reviews, setReviews] = useState(MOCK_ADAPTATION_RATING)
+  const [reviews, setReviews] = useState([])
   const [formData, setFormData] = useState({
     title: "",
     comment: "",
@@ -55,8 +48,21 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setReviews([...reviews, formData]);
-    // QOL: always reset your form inputs after valid submission
+
+    // let's start by POSTing the new review to the API
+    // and seeing what response we get back
+    fetch(`http://localhost:5000/reviews`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    }).then((response)=> {
+      return response.json()
+    }).then((data)=> {
+      console.log(data)
+    });
+
     setFormData({ title: "", comment: "", rating: 1});
   }
 
@@ -121,7 +127,7 @@ export default function Home() {
                     <FormControlLabel value="7" control={<Radio />} label="7" />
                     <FormControlLabel value="8" control={<Radio />} label="8" />
                     <FormControlLabel value="9" control={<Radio />} label="9" />
-                    <FormControlLabel value={10} control={<Radio />} label="10" />
+                    <FormControlLabel value={"10"} control={<Radio />} label="10" />
                   </RadioGroup>
                </FormControl>
               </Grid>
