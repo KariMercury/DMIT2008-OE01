@@ -27,21 +27,38 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
-/* 
-  GAME PLAN:
-    1. wire input fields to state (ideally one object for all inputs not one stateful variable per input)
-    2. wire the submit action (take stateful data, run some sore of handle fucntion to add new review)
-    3. rewire our data source to our REST API (instead of local var data)
+
+/* GAME PLAN:
+
+    1. wire input fields to state (ideally, one obj for all form inputs rather than one stateful var per field)
+    2. wire the form submit action (take stateful data, run some sort of handler function to add new review)
+    3. rewire our data source to REST API instead of local var data
     4. bonus: some other fun logic we can do + UI touchups
 */
 
-
-export default function Home() {
-  const MOCK_ADAPTATION_RATING = [{
+const MOCK_ADAPTATION_RATING = [{
     'title': 'Fight Club',
     'comment': 'Great movie and book',
     'rating': 10
   }]
+
+export default function Home() {
+  
+  const [reviews, setReviews] = useState(MOCK_ADAPTATION_RATING)
+
+  const [formData, setFormaData] = useState({
+    title: "",
+    comments: "",
+    rating: 10,
+  })
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setReviews([...reviews, formDate]);
+    //QOL: always reset your form aftre validation
+    setFormaData({title: "", comment: "", rating: 1});
+  }
+
   return (
     <div>
       <Head>
@@ -58,7 +75,9 @@ export default function Home() {
       </AppBar>
       <main>
         <Container maxWidth="md">
-          <form>
+          <form
+            onSubmit={handleSubmit}
+            >
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <TextField
@@ -67,6 +86,8 @@ export default function Home() {
                   label="Adaptation Title"
                   fullWidth
                   variant="standard"
+                  value ={FormDataEvent.title}
+                  onChange={(e) => setForm({...formData, title: e.target.event})}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
