@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 import Head from 'next/head'
 import Image from 'next/image'
@@ -13,7 +13,29 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+
+/* useEffect is another react hook (like useState).
+   
+   Its goal is, generally, to fire an inner function upon some sort of
+   lifecycle-related condition (e.g. component mounts/loads in, state changes).
+
+   *Specifically*, we want to use useEffect to talk to 'external systems' — stuff
+   outside the scope of responsibility of our app that we do still need to interact
+   with to send & receive data.
+
+   The basic idea is, we don't want 'local/internal' loading (components, state, etc.) to be
+   held hostage by external behaviour we have no control over. Since communicating with external
+   systems also (almost always) takes longer than local operations, we also don't want our 
+   component loading to be 'held hostage' by the slowness/relative delay of external comms.
+
+   Therefore -> useEffect is set up so that it fires only after the component (incl. state) loads in.
+
+*/
+
+
 export default function Home() {
+  console.log("Home component, line 1");
+
   const RANDOM_QUOTE_URL = 'https://dummyjson.com/quotes/random'
   const [quoteData, setQuoteData] = useState({
     quote: "Quote here.",
@@ -31,6 +53,26 @@ export default function Home() {
         })
       })  
   }
+
+  // 1. fire effect on component mount (very often, "on page load")
+  useEffect(
+    () => { // param 1: the callback function that should run when the effect fires
+      console.log("component has mounted, effect fired on mount")
+    },
+    []      // param 2: the dependency array (empty array = fire when component mounts)
+  )
+
+  // 2. fire effect on state change
+  useEffect(
+    () => { console.log("quote was changed") },
+    [quoteData] // when dependency array contains things (for now, let's pretend that's just state)               
+  )             // effect will fire automatically when that state changes!
+
+  // 3. evil condition you shouldn't do:
+  //    You *could* not pass a 2nd term to useEffect (no dependency array at all)
+  //    If you only have the callback function and no dependency array (even empty),
+  //    the effect will fire when the component re-renders for *any reason*.
+
 
   return (
     <div>
