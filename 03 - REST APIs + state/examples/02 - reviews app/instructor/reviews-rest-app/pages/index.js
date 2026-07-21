@@ -40,7 +40,7 @@ import Typography from '@mui/material/Typography';
 
 export default function Home() {
 
-  const [reviews, setReviews] = useState([])
+  const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     comment: "",
@@ -81,7 +81,7 @@ export default function Home() {
     .then((response)=> {
       return response.json()
     }).then((data)=> {
-      console.log(data);
+      console.log("refetched reviews.");
       setReviews(data);
     });
   }
