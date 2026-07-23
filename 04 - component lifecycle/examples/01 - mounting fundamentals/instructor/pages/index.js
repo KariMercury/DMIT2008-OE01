@@ -42,7 +42,7 @@ export default function Home() {
     author: "Author here"
   })
 
-  const handleClick = () => {
+  const getRandomQuote = () => {
     fetch(RANDOM_QUOTE_URL)
       .then((response)=> {
         return response.json()
@@ -57,7 +57,7 @@ export default function Home() {
   // 1. fire effect on component mount (very often, "on page load")
   useEffect(
     () => { // param 1: the callback function that should run when the effect fires
-      console.log("component has mounted, effect fired on mount")
+      getRandomQuote();
     },
     []      // param 2: the dependency array (empty array = fire when component mounts)
   )
@@ -120,7 +120,7 @@ export default function Home() {
             >
               <Button
                 variant="contained"
-                onClick={handleClick}
+                onClick={getRandomQuote}
               >
                 Get New Quote
               </Button>
