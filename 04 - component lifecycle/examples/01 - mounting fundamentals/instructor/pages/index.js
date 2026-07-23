@@ -34,12 +34,14 @@ import Typography from '@mui/material/Typography';
 
 
 export default function Home() {
-  console.log("Home component, line 1");
 
   const RANDOM_QUOTE_URL = 'https://dummyjson.com/quotes/random'
+  const DEFAULT_QUOTE = 'Quote here.'
+  const DEFAULT_AUTHOR = 'Author here'
+
   const [quoteData, setQuoteData] = useState({
-    quote: "Quote here.",
-    author: "Author here"
+    quote: DEFAULT_QUOTE,
+    author: DEFAULT_AUTHOR
   })
   const [numQuotes, setNumQuotes] = useState(0);
 
@@ -65,7 +67,12 @@ export default function Home() {
 
   // 2. fire effect on state change
   useEffect(
-    () => { setNumQuotes(numQuotes + 1) },
+    () => { 
+      if (quoteData.quote  !== DEFAULT_QUOTE &&
+          quoteData.author !== DEFAULT_AUTHOR) {
+        setNumQuotes(numQuotes + 1)       
+      } 
+    },
     [quoteData] // when dependency array contains things (for now, let's pretend that's just state)               
   )             // effect will fire automatically when that state changes!
 
