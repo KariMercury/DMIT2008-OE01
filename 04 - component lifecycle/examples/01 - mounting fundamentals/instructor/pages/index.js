@@ -41,6 +41,7 @@ export default function Home() {
     quote: "Quote here.",
     author: "Author here"
   })
+  const [numQuotes, setNumQuotes] = useState(0);
 
   const getRandomQuote = () => {
     fetch(RANDOM_QUOTE_URL)
@@ -64,7 +65,7 @@ export default function Home() {
 
   // 2. fire effect on state change
   useEffect(
-    () => { console.log("quote was changed") },
+    () => { setNumQuotes(numQuotes + 1) },
     [quoteData] // when dependency array contains things (for now, let's pretend that's just state)               
   )             // effect will fire automatically when that state changes!
 
@@ -126,6 +127,15 @@ export default function Home() {
               </Button>
             </Box>
           </Box>
+          <Typography
+            sx={{pt: 8}}
+            variant="h5"
+            align="center"
+            color="text.primary"
+            paragraph
+          >
+            You have fetched {numQuotes} quotes
+          </Typography>
         </Container>
       </main>
     </div>
