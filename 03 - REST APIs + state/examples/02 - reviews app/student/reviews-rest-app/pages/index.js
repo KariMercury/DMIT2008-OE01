@@ -1,5 +1,6 @@
+import { useState } from 'react';
+
 import Head from 'next/head'
-import Image from 'next/image'
 
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -30,33 +31,69 @@ import Typography from '@mui/material/Typography';
 
 /* GAME PLAN:
 
+/* GAME PLAN:
+
     1. wire input fields to state (ideally, one obj for all form inputs rather than one stateful var per field)
     2. wire the form submit action (take stateful data, run some sort of handler function to add new review)
     3. rewire our data source to REST API instead of local var data
     4. bonus: some other fun logic we can do + UI touchups
 */
 
-const MOCK_ADAPTATION_RATING = [{
-    'title': 'Fight Club',
-    'comment': 'Great movie and book',
-    'rating': 10
-  }]
+//     1. wire input fields to state (ideally, one obj for all form inputs rather than one stateful var per field)
+//     2. wire the form submit action (take stateful data, run some sort of handler function to add new review)
+//     3. rewire our data source to REST API instead of local var data
+//     4. bonus: some other fun logic we can do + UI touchups
+// */
+
+/*     */
+
 
 export default function Home() {
-  
-  const [reviews, setReviews] = useState(MOCK_ADAPTATION_RATING)
 
-  const [formData, setFormaData] = useState({
+  const [reviews, setReviews] = useState(external)
+  const [formData, setFormData] = useState({
     title: "",
-    comments: "",
-    rating: 10,
+    comment: "",
+    rating: 1,
   })
 
-  const handleSubmit = (e) => {
+  const addReview = (e) => {
     e.preventDefault();
-    setReviews([...reviews, formDate]);
-    //QOL: always reset your form aftre validation
-    setFormaData({title: "", comment: "", rating: 1});
+
+    // let's start by POSTing the new review to the API
+    // and seeing what response we get back
+    fetch(`http://localhost:5000/reviews`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    }).then((response)=> {
+      return response.json()
+    }).then((data)=> {
+      // option 1 for automating reload-on-submit:
+      // Wait for new review to successfully POST to API,
+      // then reload *all* reviews.
+      getReviews();
+
+      /* option 2 would be, instead: "I'm going to add the new form data to
+         to my local reviews array & re-render the component, and *separately*
+         POST to the API — bad! now you have no guarantee that your presentation data
+         is the same as the actual data.
+      */ 
+    });
+
+    setFormData({ title: "", comment: "", rating: 1});
+  }
+
+  const getReviews = () => {
+    fetch(`http://localhost:5000/reviews`)
+    .then((response)=> {
+      return response.json()
+    }).then((data)=> {
+      console.log(data);
+      setReviews(data);
+    });
   }
 
   return (
@@ -75,9 +112,7 @@ export default function Home() {
       </AppBar>
       <main>
         <Container maxWidth="md">
-          <form
-            onSubmit={handleSubmit}
-            >
+          <form onSubmit={addReview}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
                 <TextField
@@ -86,8 +121,8 @@ export default function Home() {
                   label="Adaptation Title"
                   fullWidth
                   variant="standard"
-                  value ={FormDataEvent.title}
-                  onChange={(e) => setForm({...formData, title: e.target.event})}
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -97,6 +132,8 @@ export default function Home() {
                   label="Comments"
                   fullWidth
                   variant="standard"
+                  value={formData.comment}
+                  onChange={(e) => setFormData({...formData, comment: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -106,6 +143,8 @@ export default function Home() {
                     row
                     aria-labelledby="adaptation-rating"
                     name="rating-buttons-group"
+                    value={formData.rating}
+                    onChange={(e) => setFormData({...formData, rating: parseInt(e.target.value)})}
                   >
                     <FormControlLabel value="1" control={<Radio />} label="1" />
                     <FormControlLabel value="2" control={<Radio />} label="2" />
@@ -116,7 +155,7 @@ export default function Home() {
                     <FormControlLabel value="7" control={<Radio />} label="7" />
                     <FormControlLabel value="8" control={<Radio />} label="8" />
                     <FormControlLabel value="9" control={<Radio />} label="9" />
-                    <FormControlLabel value="10" control={<Radio />} label="10" />
+                    <FormControlLabel value={"10"} control={<Radio />} label="10" />
                   </RadioGroup>
                </FormControl>
               </Grid>
@@ -138,12 +177,13 @@ export default function Home() {
           >
             <Button
               variant="contained"
+              onClick={getReviews}
             >
               Load All Current Reviews
             </Button>
           </Box>
-          {MOCK_ADAPTATION_RATING.map((adaptation, index)=> {
-            return <Card key={index}>
+          {reviews.map((adaptation, index)=> {
+            return <Card key={index} sx={{ my: 2 }}>
               <CardHeader
                 avatar={
                   <Avatar sx={{ bgcolor: 'blue' }} aria-label="recipe">
@@ -171,3 +211,16 @@ export default function Home() {
     </div>
   )
 }
+
+
+
+
+
+// rendering from reviews container stateful container
+// then set reviews sets it
+// get reviews - gets the reviews from api sets to state
+// the benefit of tightly purposed functions - like a cookie cutter you can reuse it.. same review different move dough
+// retrieving data is a happy and sad thing - facts - jumping off cliff dowes chute work?
+// remember only when the fetch is done will it run 
+// basically can automate the circutry
+// give review / reload all data from

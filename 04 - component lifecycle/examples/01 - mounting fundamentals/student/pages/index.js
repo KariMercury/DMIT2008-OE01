@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {use, useEffect, useState} from 'react'
 
 import Head from 'next/head'
 import Image from 'next/image'
@@ -13,6 +13,26 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+/*   Use Effect = react hook like useState
+    its goal is to fire an inner function upn some sort of lifescyle relation condition
+    
+        component mounts/loads in state changes
+        
+    specifically we want to useEffect to talk to external sytems --
+      stuff outside the scope of responsibiity of our app that we still need to interac wot
+      
+      DONOT wnat local or interal loading componente/state etc -- to be held hostage by external behavious we have no control over. Since communicationg with external systems
+      also almost always takes loner thatn local operations
+      we also dont want our componanent loading to be held hostage by the slowness and relative relat int he external comms
+      
+      therefor useEffet is set up so that it fires only afte the componest icel. state loads in BINGO - ass04 gonna need this bish
+      
+      
+      
+      UseEffect 
+          param 1 = the callback fucntion that should run when the funciton rusn
+          param 2 = the dependency array - empty array means when component mounts [] its a meanign for something that has a meaning again more reasons js is stupid like english */ 
+
 export default function Home() {
   const RANDOM_QUOTE_URL = 'https://api.quotable.io/random'
   const [quoteData, setQuoteData] = useState({
@@ -21,6 +41,8 @@ export default function Home() {
   })
 
   const handleClick = () => {
+    
+    //use this style same as ASS01
     fetch(RANDOM_QUOTE_URL)
       .then((response)=> {
         return response.json()
@@ -31,9 +53,24 @@ export default function Home() {
         })
       })
 
-
-    
   }
+
+  // toggle reactStreict mode: to false
+//useEffect - 
+//    Effects are submissive ... tell them what to do and when to do it and they will be happy little subs <3
+
+// hard no- strong limit - no no
+  // useEffect(
+  //   () => {console.log("component re-render / I am a terrible programmer or i hate my comuter or both")}
+  // )
+
+// use useEfect when chatting to the outside world
+
+  useEffect(
+  () => {console.log("quote was changed")},
+  [quoteData] 
+)
+
 
   return (
     <div>
