@@ -42,14 +42,7 @@ export default function ReviewForm({ reviews, onReviewsChange }) {
   const [comments, setComments] = useState("")
   const [rating, setRating]     = useState(0)
 
-  const loadAllReviews = () => {
-    // I'm demonstrating 'bad practice' in the interest of concision;
-    // ideally, API functions would be in a separate layer from rendering.
-    getReviews()
-      .then((data) => {
-        onReviewsChange(data)
-    });
-  }
+ 
 
   const handleSubmit = (event) => {
     event.preventDefault();

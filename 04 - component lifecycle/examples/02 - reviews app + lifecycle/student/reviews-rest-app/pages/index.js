@@ -1,6 +1,9 @@
 // React hooks
 import { useState } from 'react';
 
+// API funcitn 
+import { getREviews } from './api/reviews';
+
 // nextjs components
 import Head from 'next/head'
 
@@ -15,11 +18,27 @@ import Typography from '@mui/material/Typography';
 // our own components
 import ReviewCard from './components/ReviewCard';
 import ReviewForm from './components/ReviewForm'
+import { useEffect } from 'react';
 
 
 export default function Home() {
 
-  const [reviews, setReviews] = useState([])
+  const [reviews, setReviews] = useState([])\
+
+   const loadAllReviews = () => {
+      // I'm demonstrating 'bad practice' in the interest of concision;
+      // ideally, API functions would be in a separate layer from rendering.
+      getReviews()
+        .then((data) => {
+          onReviewsChange(data)
+      });
+    }
+
+    useEffect(() => {
+      loadAllReviews();
+    }),
+      []
+  }
 
   return (
     <div>
