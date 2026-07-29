@@ -1,8 +1,8 @@
 // React hooks
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// API funcitn 
-import { getREviews } from './api/reviews';
+// API functions
+import { getReviews } from './api/reviews';
 
 // nextjs components
 import Head from 'next/head'
@@ -18,27 +18,26 @@ import Typography from '@mui/material/Typography';
 // our own components
 import ReviewCard from './components/ReviewCard';
 import ReviewForm from './components/ReviewForm'
-import { useEffect } from 'react';
 
 
 export default function Home() {
 
-  const [reviews, setReviews] = useState([])\
+  const [reviews, setReviews] = useState([])
 
-   const loadAllReviews = () => {
-      // I'm demonstrating 'bad practice' in the interest of concision;
-      // ideally, API functions would be in a separate layer from rendering.
-      getReviews()
-        .then((data) => {
-          onReviewsChange(data)
-      });
-    }
-
-    useEffect(() => {
-      loadAllReviews();
-    }),
-      []
+  const loadAllReviews = () => {
+    // I'm demonstrating 'bad practice' in the interest of concision;
+    // ideally, API functions would be in a separate layer from rendering.
+    getReviews()
+      .then((data) => {
+        setReviews(data)
+    });
   }
+
+  useEffect(() => {
+    loadAllReviews();
+  },   // param1: the logic (callback function) that should run when effect fires
+    [] // param2: the dependency array ('when' should the effect fire? here, when component mounts)
+  )
 
   return (
     <div>

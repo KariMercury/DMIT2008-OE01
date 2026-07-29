@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 export default function ReviewCard({ rating, title, comment }) {
 
-  const getRatingColour = (rating) => {
+ const getRatingColour = (rating) => {
 
     if (!isNaN || !(1 <= rating <= 10)) {
       throw new RangeError(
@@ -40,6 +40,12 @@ export default function ReviewCard({ rating, title, comment }) {
           <Avatar sx={{ bgcolor: getRatingColour(rating) }} aria-label="recipe">
             {rating}
           </Avatar>
+        }
+
+        action={
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
         }
         
         title={
