@@ -48,7 +48,7 @@ export default function ReviewCard({
   const deleteReviewHandler = (reviewId) => {
     console.log(`deleting ${reviewId}`);
     // API delete is still async/non-obstructing; they're just automated together now
-    deleteReviewItem(reviewId).then(
+    deleteReview(reviewId).then(
       (data) => { deleteCallback(id) }
     )
   }
