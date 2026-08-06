@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+
+import { getAgencies } from '@utils/api/agencies';
+
 import Head from 'next/head'
 
 import Typography from '@mui/material/Typography';
@@ -9,6 +13,20 @@ import NavBar from '@components/NavBar';
 
 
 export default function Home() {
+
+  const [agenciesData, setAgenciesData] = useState([]);
+
+  useEffect(
+    () => {
+      getAgencies().then(
+        (data) => {
+          console.log(data);
+          setAgenciesData(data.results)
+        }
+      )
+    },
+    []
+  )
 
   return (
     <div>
@@ -33,6 +51,18 @@ export default function Home() {
               alignItems: 'center',
             }}
           >
+            {agenciesData.map(
+              (agency) => {
+                return <AgencyCard
+                  key={agency.id}
+                  id={agency.id}
+                  imageUrl={agency.image_url}
+                  name={agency.name}
+                  abbreviation={agency.abbrev}
+                  description={agency.description}
+                />
+              }
+            )}
           </Box>
         </Container>
 
