@@ -2,6 +2,7 @@
 https://mui.com/material-ui/react-card/#media
 
 */
+import { useRouter } from 'next/router';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -11,6 +12,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 export default function AgencyCard(props) {
+
+    const router = useRouter();
+
+    const navigateToAgencyPage = () => {
+      router.push(`/agency/${props.id}`)
+    }
+
     return <Card sx={{ marginTop: "8px", maxWidth: 345 }}>
     {props.imageUrl && <CardMedia
       component="img"
@@ -30,7 +38,12 @@ export default function AgencyCard(props) {
       </Typography>
     </CardContent>
     <CardActions>
-      <Button size="small">Go to Agency</Button>
+      <Button
+        size="small"
+        onClick={navigateToAgencyPage}
+      >
+        Go to Agency
+      </Button>
     </CardActions>
   </Card>
 }
