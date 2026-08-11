@@ -32,3 +32,89 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+
+NOTES: 
+
+jest = js + test
+run the framework looks for tests ![jEST](image.png)
+
+jest .config.js ![jest.config.js](image-2.png) << basicallly this is the test im using / where the project lives >>
+
+package.json ![package-json](image-3.png)
+npm run test
+ 
+
+Watch Flag = watches for changes in the file - similar to hotReload
+
+create new file: ![toDoTestJs](image-4.png)
+
+First grab your react functions, @testing-library/jest-dom. import components ![imports](image-6.png)
+Skeleton test logic
+
+test(
+    'test name',
+    () => {/* callback ()=>, the actual test logic */ }
+)
+
+THREE STAGES
+// when we do a test we want ASSEMBLE / ACT / ACTION 
+        || SETUP/GIVENS: establish expected result, gather neccessary parts, etc.
+           ACT: fire any lgoic we are testing correct functionalit for
+           ASSERT: compare/examine result
+
+test(
+    'toDo list title renders correctly',
+    () => {
+        1. setup 
+            renders(<TodoList />)
+            const titleElement = screen.getByText("Our Todo List")
+        2. act - no logic to fire here, jsut the DOM extraction above
+        3. assert
+        expect(titleElement).toBeInTheDocument();
+    }
+)
+
+
+// next - test that what is input actually happens 
+
+// test 2: testing behavioural logic (todo list submission)
+// test nono... testing too many things at once.. same with experiments... only one independent variable at a time
+![test2](image-7.png)
+![accessingElements](image-8.png)
+
+test(
+    'todo items adds successfully to list',
+    () => {
+        //1. setup
+        const // dif ways to swipe elements - make sure to give be specific item - ID for that element
+        const // 
+        const // see: data-test componenets in compponents todo list ** PREFFERED way of snipping elements : by some sort of id/attribute
+        const 
+
+        //2. act
+        fireEvent.change(
+            inputElement, // the element I want to fire a change event on
+            change the event target value to a simulate string instead
+            { object { value: EXPECTED_STRING }}
+        )
+
+        //3. assert
+        expect(inputElement.value).toBe(EXPECTED_STRING)
+    }
+
+    act(() => {
+        buttonElement.click()
+    })
+
+    assert
+    expect(inputElement.value).toBe('')
+    expect(listElement).toHaveTextContent(EXPECTED_STRING)
+)
+
+
+
+
+
+
